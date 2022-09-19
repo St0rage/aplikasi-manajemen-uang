@@ -68,7 +68,7 @@ class PiggyBankController extends Controller
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
-            'amount' => 'required|numeric'
+            'amount' => 'required|numeric|min:10000'
         ]);
 
         $transaction = new PiggyBankTransaction([
@@ -93,5 +93,44 @@ class PiggyBankController extends Controller
             'status' => 'success',
             'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil ditambahkan ke ' . $piggyBank->piggy_bank_name
         ], 200);
+    }
+
+    public function substractPiggyBankTransaction(PiggyBank $piggyBank, Request $request)
+    {
+        if (!auth()->user()->id == $piggyBank->user_id) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'error',
+            ], 404);
+        };
+
+        $validated = $request->validate([
+            'transaction_name' => 'required|max:50',
+            'amount' => "required|numeric|min:10000|lte:$piggyBank->piggy_bank_total"
+        ]);
+
+        $transaction = new PiggyBankTransaction([
+            'transaction_name' => $validated['transaction_name'],
+            'amount' => 0 - $validated['amount'],
+            'status' => 0,
+            'date' => time()
+        ]);
+        $transaction = $piggyBank->piggyBankTransactions()->save($transaction);
+
+        $transactions = [];
+
+        foreach($piggyBank->piggyBankTransactions as $key => $value) {
+            array_push($transactions, $value['amount']);
+        }
+
+        $piggyBank->piggy_bank_total = array_sum($transactions);
+        $piggyBank->save();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil dipotong dari ' . $piggyBank->piggy_bank_name
+        ], 200);
+
     }
 }
