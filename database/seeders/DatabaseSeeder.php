@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('dani12345')
         ]);
 
-        \App\Models\Saving::create([
-            'user_id' => 1,
-            'saving_name' => 'Tabungan Pribadi',
-            'saving_total' => 10000000
-        ]);
+        // \App\Models\PiggyBank::create([
+        //     'user_id' => 1,
+        //     'saving_name' => 'Tabungan Pribadi',
+        //     'saving_total' => 10000000
+        // ]);
     }
 }

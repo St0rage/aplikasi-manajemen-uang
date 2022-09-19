@@ -42,8 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function savings()
+    public function piggyBanks()
     {
-        return $this->hasMany(Saving::class);
+        return $this->hasMany(PiggyBank::class);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Saving extends Model
+class PiggyBank extends Model
 {
     use HasFactory;
 
@@ -13,6 +13,11 @@ class Saving extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(PiggyBank::class);
+    }
+
+    public function piggyBankTransactions()
+    {
+        return $this->hasMany(PiggyBankTransaction::class, 'piggy_bank_id');
     }
 }

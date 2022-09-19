@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\PiggyBankController;
+use App\Models\PiggyBank;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,21 +18,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::middleware('auth:sanctum')->group(function () {
-
-    Route::get('/get-saving', function(Request $request) {
-        $user = User::with('savings')->where('id', $request->user()->id)->get()->first();
-
-        return ['req', $user];
-
-    });
+    // PiggyBank
+    Route::get('/piggybanks', [PiggyBankController::class, 'getPiggyBanks']);
+    Route::get('/piggybank/detail/{piggyBank}', [PiggyBankController::class, 'getPiggyBankDetail']);
+    Route::post('/piggybank/create', [PiggyBankController::class, 'createPiggyBank']);
+    Route::post('/piggybank/transaction/create/{piggyBank}', [PiggyBankController::class, 'createPiggyBankTransaction']);
 
     // logout
     Route::get('/logout', [AuthController::class, 'logout']);
 });
 
+// login
 Route::post('/login', [AuthController::class, 'login']);

@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('savings', function (Blueprint $table) {
+        Schema::create('piggy_bank_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->string('saving_name');
-            $table->decimal('saving_total', 10,2);
+            $table->foreignId('piggy_bank_id');
+            $table->string('transaction_name');
+            $table->decimal('amount', 10,2);
+            $table->boolean('status');
+            $table->string('date');
             $table->timestamps();
         });
     }
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('savings');
+        Schema::dropIfExists('piggy_bank_transactions');
     }
 };
