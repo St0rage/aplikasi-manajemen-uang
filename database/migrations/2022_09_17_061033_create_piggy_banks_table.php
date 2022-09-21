@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->string('piggy_bank_name');
             $table->decimal('piggy_bank_total', 10,2)->default(0);
+            $table->boolean('type')->default(0);
             $table->timestamps();
         });
     }

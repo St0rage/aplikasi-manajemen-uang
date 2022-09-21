@@ -23,6 +23,12 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('dani12345')
         ]);
 
+        \App\Models\User::factory()->create([
+            'name' => 'Veronica Christine',
+            'email' => 'veronica25@gmail.com',
+            'password' => Hash::make('vero12345')
+        ]);
+
         // \App\Models\PiggyBank::create([
         //     'user_id' => 1,
         //     'saving_name' => 'Tabungan Pribadi',
