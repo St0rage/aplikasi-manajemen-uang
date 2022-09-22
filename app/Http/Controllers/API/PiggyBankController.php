@@ -12,6 +12,10 @@ class PiggyBankController extends Controller
 {
     public function createPiggyBank(Request $request)
     {
+        $primayPiggyBank =  PiggyBank::where('user_id', auth()->user()->id)
+                                ->where('type', 1)
+                                ->count();
+
         $validated = $request->validate([
             // 'piggy_bank_name' => 'required|max:50|unique:piggy_banks,piggy_bank_name'
             'piggy_bank_name' => [
@@ -23,13 +27,14 @@ class PiggyBankController extends Controller
 
         PiggyBank::create([
             'user_id' => auth()->user()->id,
-            'piggy_bank_name' => $validated['piggy_bank_name']
+            'piggy_bank_name' => $validated['piggy_bank_name'],
+            'type' => $primayPiggyBank == 1 ? 0 : 1
         ]);
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => 'Saving ' . $validated['piggy_bank_name'] . ' berhasil dibuat'
+            'message' => 'Tabungan ' . $validated['piggy_bank_name'] . ' berhasil dibuat'
         ], 200);
     }
 
@@ -40,7 +45,7 @@ class PiggyBankController extends Controller
                 'code' => 404,
                 'status' => 'error',
             ], 404);
-        };
+        }
 
         $rules = [
             'piggy_bank_name' => 'required|max:50'
@@ -62,7 +67,7 @@ class PiggyBankController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => 'Saving ' . $validated['piggy_bank_name'] . ' berhasil diubah'
+            'message' => 'Tabungan ' . $validated['piggy_bank_name'] . ' berhasil diubah'
         ], 200);
     }
 
@@ -81,18 +86,40 @@ class PiggyBankController extends Controller
     public function getPiggyBankDetail(PiggyBank $piggyBank)
     {
         
-        if (!auth()->user()->id != $piggyBank->user_id) {
+        if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
                 'code' => 404,
                 'status' => 'error',
             ], 404);
-        };
+        }
 
         return response()->json([
             'code' => 200,
             'status' => 'success',
             'data' => $piggyBank
         ], 200);
+    }
+
+    public function deletePiggyBank(PiggyBank $piggyBank)
+    {
+        if (auth()->user()->id != $piggyBank->user_id) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'error',
+            ], 404);
+        }
+
+        if ($piggyBank->type == 1) {
+            return response()->json([
+                'code' => 400,
+                'status' => 'error',
+                'message' => 'Tabungan ini bersifat primary, tidak bisa dihapus'
+            ]);
+        }
+
+        return $piggyBank;
+
+        
     }
 
     public function createPiggyBankTransaction(Request $request, PiggyBank $piggyBank)
@@ -102,7 +129,7 @@ class PiggyBankController extends Controller
                 'code' => 404,
                 'status' => 'error',
             ], 404);
-        };
+        }
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
@@ -134,7 +161,7 @@ class PiggyBankController extends Controller
                 'code' => 404,
                 'status' => 'error',
             ], 404);
-        };
+        }
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
@@ -166,7 +193,7 @@ class PiggyBankController extends Controller
                 'code' => 404,
                 'status' => 'error',
             ], 404);
-        };        
+        }    
 
         PiggyBankTransaction::destroy($piggyBankTransaction->id);
 

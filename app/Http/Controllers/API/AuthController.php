@@ -17,7 +17,7 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        $user =  User::where('email', $credentials['email'])->first();
+        $user =  User::with('PiggyBanks')->where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
@@ -33,6 +33,7 @@ class AuthController extends Controller
             'code' => '200',
             'status' => 'success',
             'user' => $user,
+            'piggy_banks' => $user->piggyBanks,
             'token' => $token
         ], 200);
     }

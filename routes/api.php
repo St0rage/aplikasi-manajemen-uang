@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/piggybank/detail/{piggyBank}', [PiggyBankController::class, 'getPiggyBankDetail']);
     Route::post('/piggybank/create', [PiggyBankController::class, 'createPiggyBank']);
     Route::put('/piggybank/update/{piggyBank}', [PiggyBankController::class, 'updatePiggyBank']);
+    Route::delete('/piggybank/delete/{piggyBank}', [PiggyBankController::class, 'deletePiggyBank']);
     Route::post('/piggybank/transaction/create/{piggyBank}', [PiggyBankController::class, 'createPiggyBankTransaction']);
     Route::post('/piggybank/transaction/substract/{piggyBank}', [PiggyBankController::class, 'substractPiggyBankTransaction']);
     Route::delete('/piggybank/transaction/delete/{piggyBankTransaction}', [PiggyBankController::class, 'deletePiggyBankTransaction']);
