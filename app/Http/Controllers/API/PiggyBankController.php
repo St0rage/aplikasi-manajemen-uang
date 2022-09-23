@@ -10,6 +10,35 @@ use Illuminate\Validation\Rule;
 
 class PiggyBankController extends Controller
 {
+    public function getPiggyBanks()
+    {
+        $piggyBanks = PiggyBank::where('user_id', auth()->user()->id)->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'data' => $piggyBanks
+        ], 200);
+
+    }
+
+    public function getPiggyBankDetail(PiggyBank $piggyBank)
+    {
+        
+        if (auth()->user()->id != $piggyBank->user_id) {
+            return response()->json([
+                'code' => 404,
+                'status' => 'error',
+            ], 404);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'data' => $piggyBank
+        ], 200);
+    }
+
     public function createPiggyBank(Request $request)
     {
         $primayPiggyBank =  PiggyBank::where('user_id', auth()->user()->id)
@@ -67,36 +96,7 @@ class PiggyBankController extends Controller
         return response()->json([
             'code' => 200,
             'status' => 'success',
-            'message' => 'Tabungan ' . $validated['piggy_bank_name'] . ' berhasil diubah'
-        ], 200);
-    }
-
-    public function getPiggyBanks()
-    {
-        $piggyBanks = PiggyBank::where('user_id', auth()->user()->id)->get();
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'data' => $piggyBanks
-        ], 200);
-
-    }
-
-    public function getPiggyBankDetail(PiggyBank $piggyBank)
-    {
-        
-        if (auth()->user()->id != $piggyBank->user_id) {
-            return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
-        }
-
-        return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'data' => $piggyBank
+            'message' => 'Tabungan berhasil diubah menjadi ' . $validated['piggy_bank_name']
         ], 200);
     }
 
@@ -186,7 +186,7 @@ class PiggyBankController extends Controller
         ], 200);
     }
 
-    public function substractPiggyBankTransaction(PiggyBank $piggyBank, Request $request)
+    public function substractPiggyBankTransaction(Request $request, PiggyBank $piggyBank)
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([

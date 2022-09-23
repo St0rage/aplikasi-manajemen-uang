@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\PiggyBank;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class AuthController extends Controller
             'password' => ['required']
         ]);
 
-        $user =  User::with('PiggyBanks')->where('email', $credentials['email'])->first();
+        $user =  User::where('email', $credentials['email'])->first();
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
@@ -27,13 +28,15 @@ class AuthController extends Controller
             ], 401);
         }
 
+        $piggyBankCount = PiggyBank::where('user_id', $user->id)->count();
+
         $token = $user->createToken('token')->plainTextToken;
 
         return response()->json([
             'code' => '200',
             'status' => 'success',
             'user' => $user,
-            'piggy_banks' => $user->piggyBanks,
+            'piggy_banks' => $piggyBankCount,
             'token' => $token
         ], 200);
     }
