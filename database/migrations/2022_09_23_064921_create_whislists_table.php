@@ -13,13 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('piggy_bank_transactions', function (Blueprint $table) {
+        Schema::create('whislists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('piggy_bank_id')->constrained()->onDelete('cascade');
-            $table->string('transaction_name');
-            $table->decimal('amount', 10,2);
-            $table->boolean('status');
-            $table->string('date');
+            $table->foreignId('user_id');
+            $table->string('whislist_name');
+            $table->decimal('whislist_total', 10,2)->default(0);
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('piggy_bank_transactions');
+        Schema::dropIfExists('whislists');
     }
 };

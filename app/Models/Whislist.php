@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PiggyBank extends Model
+class Whislist extends Model
 {
     use HasFactory;
 
@@ -16,8 +16,8 @@ class PiggyBank extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function piggyBankTransactions()
+    public function whislistTransactions()
     {
-        return $this->hasMany(PiggyBankTransaction::class, 'piggy_bank_id');
+        return $this->hasMany(WhislistTransaction::class, 'whislist_id');
     }
 }

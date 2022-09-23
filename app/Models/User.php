@@ -46,4 +46,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(PiggyBank::class);
     }
+
+    public function whislists()
+    {
+        return $this->hasMany(Whislist::class);
+    }
 }
