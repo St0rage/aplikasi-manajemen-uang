@@ -27,9 +27,9 @@ class PiggyBankController extends Controller
         
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         return response()->json([
@@ -71,9 +71,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $rules = [
@@ -104,9 +104,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         if ($piggyBank->type == 1) {
@@ -151,16 +151,15 @@ class PiggyBankController extends Controller
                 'message' => 'Tabungan berhasil dihapus'      
             ]);
         }
-
     }
 
     public function createPiggyBankTransaction(Request $request, PiggyBank $piggyBank)
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $validated = $request->validate([
@@ -190,9 +189,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $validated = $request->validate([
@@ -222,10 +221,19 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBankTransaction->piggyBank->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
-        }    
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
+        }   
+        
+        $lastTransaction =  PiggyBankTransaction::where('piggy_bank_id', $piggyBankTransaction->piggy_bank_id)->get()->last();
+
+        if ($piggyBankTransaction->id != $lastTransaction->id) {
+            return response()->json([
+                'code' => 400,
+                'status' => 'Hanya transaksi terakhir yang bisa dihapus'
+            ], 400);
+        }
 
         PiggyBankTransaction::destroy($piggyBankTransaction->id);
 
@@ -250,5 +258,7 @@ class PiggyBankController extends Controller
         }
 
         PiggyBank::where('id', $piggyBankId)->update(['piggy_bank_total' => array_sum($transactions)]);
+
+        BalanceController::sumBalance();
     }
 }

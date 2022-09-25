@@ -80,7 +80,7 @@ return [
     'lte' => [
         'array' => 'The :attribute must not have more than :value items.',
         'file' => 'The :attribute must be less than or equal to :value kilobytes.',
-        'numeric' => 'The :attribute must be less than or equal to :value.',
+        'numeric' => 'Penarikan gagal, saldo tidak mencukupi',
         'string' => 'The :attribute must be less than or equal to :value characters.',
     ],
     'mac_address' => 'The :attribute must be a valid MAC address.',
@@ -96,7 +96,7 @@ return [
     'min' => [
         'array' => 'The :attribute must have at least :min items.',
         'file' => 'The :attribute must be at least :min kilobytes.',
-        'numeric' => 'The :attribute must be at least :min.',
+        'numeric' => 'Minimal Penarikan Rp :min.',
         'string' => 'The :attribute must be at least :min characters.',
     ],
     'min_digits' => 'The :attribute must have at least :min digits.',

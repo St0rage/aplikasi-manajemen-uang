@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Balance;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,6 +30,16 @@ class DatabaseSeeder extends Seeder
             'email' => 'veronica25@gmail.com',
             'password' => Hash::make('vero12345')
         ]);
+
+        Balance::create([
+            'user_id' => 1
+        ]);
+
+        Balance::create([
+            'user_id' => 2
+        ]);
+
+
 
         // \App\Models\PiggyBank::create([
         //     'user_id' => 1,

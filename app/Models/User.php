@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Whislist::class);
     }
+
+    public function balance()
+    {
+        return $this->hasOne(Balance::class);
+    }
 }

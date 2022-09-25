@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Whislist;
+use App\Models\PiggyBank;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Http\Controllers\Controller;
-use App\Models\Whislist;
 use App\Models\WhislistTransaction;
+use App\Http\Controllers\Controller;
+use App\Models\PiggyBankTransaction;
 
 class WhislistController extends Controller
 {
@@ -25,9 +27,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         return response()->json([
@@ -63,9 +65,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $rules = [
@@ -91,13 +93,57 @@ class WhislistController extends Controller
         ], 200);
     }
 
+    public function deleteWhislist(Whislist $whislist)
+    {
+        if (auth()->user()->id != $whislist->user_id) {
+            return response()->json([
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
+        }
+
+        $currentAmount = $whislist->whislist_total;
+        $currentWhislistName = $whislist->whislist_name;
+
+        Whislist::destroy($whislist->id);
+
+        if ($currentAmount == 0) {
+            return response()->json([
+                'code' => 200,
+                'status' =>  'success',
+                'message' => 'Whislist berhasil dihapus'      
+            ]);
+        } else {
+            $primayPiggyBank = PiggyBank::where('user_id', auth()->user()->id)
+                                            ->where('type', 1)
+                                            ->get()->first();
+
+            $transaction = new PiggyBankTransaction([
+                'transaction_name' => 'Saldo Pindahan Whislist ' . $currentWhislistName,
+                'amount' => $currentAmount,
+                'status' => 1,
+                'date' => time()
+            ]);
+
+            $transaction = $primayPiggyBank->piggyBankTransactions()->save($transaction);
+
+            PiggyBankController::sumPiggyBankTransaction($primayPiggyBank->id);
+
+            return response()->json([
+                'code' => 200,
+                'status' =>  'success',
+                'message' => 'Whislist berhasil dihapus'      
+            ]);
+        }
+    }
+
     public function createWhislistTransaction(Request $request, Whislist $whislist)
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $validated = $request->validate([
@@ -127,9 +173,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 404,
-                'status' => 'error',
-            ], 404);
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
         }
 
         $validated = $request->validate([
@@ -155,6 +201,36 @@ class WhislistController extends Controller
         ], 200);
     }
 
+    public function deleteWhislistTransaction(WhislistTransaction $whislistTransaction)
+    {
+        if (auth()->user()->id != $whislistTransaction->whislist->user_id) {
+            return response()->json([
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
+        }
+        
+        $lastTransaction =  WhislistTransaction::where('whislist_id', $whislistTransaction->whislist_id)->get()->last();
+
+        if ($whislistTransaction->id != $lastTransaction->id) {
+            return response()->json([
+                'code' => 400,
+                'status' => 'Hanya transaksi terakhir yang bisa dihapus'
+            ], 400);
+        }
+
+        WhislistTransaction::destroy($whislistTransaction->id);
+
+        // SUM TRANSACTION
+        self::sumWhislistTransaction($whislistTransaction->whislist_id);
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Transaksi berhasil dihapus'
+        ], 200);
+    }
+
     private static function sumWhislistTransaction($whislistId): void
     {
         $transactions = [];
@@ -166,5 +242,7 @@ class WhislistController extends Controller
         }
 
         Whislist::where('id', $whislistId)->update(['whislist_total' => array_sum($transactions)]);
+
+        BalanceController::sumBalance();
     }
 }

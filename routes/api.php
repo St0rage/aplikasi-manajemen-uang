@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BalanceController;
 use App\Http\Controllers\API\PiggyBankController;
 use App\Http\Controllers\API\WhislistController;
 use Illuminate\Support\Facades\Route;
@@ -32,9 +33,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/whislist/detail/{whislist}', [WhislistController::class, 'getWhislistDetail']);
     Route::post('/whislist/create', [WhislistController::class, 'createWhislist']);
     Route::put('/whislist/update/{whislist}', [WhislistController::class, 'updateWhislist']);
-
+    Route::delete('/whislist/delete/{whislist}', [WhislistController::class, 'deleteWhislist']);
     Route::post('/whislist/transaction/create/{whislist}', [WhislistController::class, 'createWhislistTransaction']);
     Route::post('/whislist/transaction/substract/{whislist}', [WhislistController::class, 'substractWhislistTransaction']);
+    Route::delete('/whislist/transaction/delete/{whislistTransaction}', [WhislistController::class, 'deleteWhislistTransaction']);
+
+    // Balance
+    Route::get('/balance', [BalanceController::class, 'getBalance']);
 
     // logout
     Route::get('/logout', [AuthController::class, 'logout']);
