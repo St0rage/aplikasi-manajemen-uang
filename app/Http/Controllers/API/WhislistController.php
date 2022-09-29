@@ -14,12 +14,14 @@ class WhislistController extends Controller
 {
     public function getWhislists()
     {
-        $whislist = Whislist::where('user_id', auth()->user()->id)->get();
+        $whislists = Whislist::where('user_id', auth()->user()->id)->get();
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
-            'data' => $whislist
+            'status' => 'ok',
+            'data' => [
+                'whislists' => $whislists
+            ]
         ], 200);
     }
 
@@ -34,8 +36,10 @@ class WhislistController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
-            'data' => $whislist
+            'status' => 'ok',
+            'data' => [
+                'whislist' => $whislist
+            ]
         ], 200);
     }
 
@@ -55,10 +59,10 @@ class WhislistController extends Controller
         ]);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
+            'code' => 201,
+            'status' => 'created',
             'message' => 'Whislist ' . $validated['whislist_name'] . ' berhasil dibuat'
-        ], 200);
+        ], 201);
     }
 
     public function updateWhislist(Request $request, Whislist $whislist)
@@ -88,7 +92,7 @@ class WhislistController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
+            'status' => 'ok',
             'message' => 'Whislist berhasil diubah menjadi ' . $validated['whislist_name']
         ], 200);
     }
@@ -109,10 +113,10 @@ class WhislistController extends Controller
 
         if ($currentAmount == 0) {
             return response()->json([
-                'code' => 200,
+                'code' => 204,
                 'status' =>  'success',
                 'message' => 'Whislist berhasil dihapus'      
-            ]);
+            ], 204);
         } else {
             $primayPiggyBank = PiggyBank::where('user_id', auth()->user()->id)
                                             ->where('type', 1)
@@ -130,11 +134,31 @@ class WhislistController extends Controller
             PiggyBankController::sumPiggyBankTransaction($primayPiggyBank->id);
 
             return response()->json([
-                'code' => 200,
+                'code' => 204,
                 'status' =>  'success',
                 'message' => 'Whislist berhasil dihapus'      
-            ]);
+            ], 204);
         }
+    }
+
+    public function getWhislistTransactions(Request $request, Whislist $whislist)
+    {
+        if (auth()->user()->id != $whislist->user_id) {
+            return response()->json([
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
+        }
+
+        $transactions =  WhislistTransaction::where('whislist_id', $whislist->id)->offset($request->page * 5)->limit(5)->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'ok',
+            'data' => [
+                'transactions' => $transactions
+            ]
+        ], 200);
     }
 
     public function createWhislistTransaction(Request $request, Whislist $whislist)
@@ -163,10 +187,10 @@ class WhislistController extends Controller
         self::sumWhislistTransaction($whislist->id);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil ditambahkan ke Whislist ' . $whislist->whislist_name
-        ], 200);
+            'code' => 201,
+            'status' => 'created',
+            'message' => 'Transaksi sebesar Rp ' . number_format($validated['amount']) . ' berhasil ditambahkan ke Whislist ' . $whislist->whislist_name
+        ], 201);
     }
 
     public function substractWhislistTransaction(Request $request, Whislist $whislist)
@@ -180,7 +204,19 @@ class WhislistController extends Controller
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
-            'amount' => "required|numeric|min:10000|lte:$whislist->whislist_total"
+            // 'amount' => "required|numeric|min:10000|lte:$whislist->whislist_total"
+            'amount' => [
+                'required',
+                'numeric',
+                'min:1000',
+                function($attribute, $value, $fail) use ($whislist) {
+                    if ($whislist->whislist_total == 0) {
+                        $fail('Penarikan gagal saldo tidak mencukupi.');
+                    } else if ($value > $whislist->whislist_total) {
+                        $fail('Gagal, penarikan tidak boleh lebih dari Rp ' . number_format($whislist->whislist_total) . '.');
+                    }
+                }
+            ]
         ]);
 
         $transaction = new WhislistTransaction([
@@ -195,10 +231,10 @@ class WhislistController extends Controller
         self::sumWhislistTransaction($whislist->id);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil dipotong dari Whislist ' . $whislist->whislist_name
-        ], 200);
+            'code' => 201,
+            'status' => 'created',
+            'message' => 'Transaksi sebesar Rp ' . number_format($validated['amount']) . ' berhasil dipotong dari Whislist ' . $whislist->whislist_name
+        ], 201);
     }
 
     public function deleteWhislistTransaction(WhislistTransaction $whislistTransaction)
@@ -225,10 +261,10 @@ class WhislistController extends Controller
         self::sumWhislistTransaction($whislistTransaction->whislist_id);
 
         return response()->json([
-            'code' => 200,
+            'code' => 204,
             'status' => 'success',
             'message' => 'Transaksi berhasil dihapus'
-        ], 200);
+        ], 204);
     }
 
     private static function sumWhislistTransaction($whislistId): void
@@ -243,6 +279,7 @@ class WhislistController extends Controller
 
         Whislist::where('id', $whislistId)->update(['whislist_total' => array_sum($transactions)]);
 
+        // SUM BALANCE
         BalanceController::sumBalance();
     }
 }

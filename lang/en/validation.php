@@ -88,7 +88,7 @@ return [
         'array' => 'The :attribute must not have more than :max items.',
         'file' => 'The :attribute must not be greater than :max kilobytes.',
         'numeric' => 'The :attribute must not be greater than :max.',
-        'string' => 'The :attribute must not be greater than :max characters.',
+        'string' => 'Nama :attribute tidak boleh lebih dari :max karakter.',
     ],
     'max_digits' => 'The :attribute must not have more than :max digits.',
     'mimes' => 'The :attribute must be a file of type: :values.',
@@ -117,7 +117,7 @@ return [
     'prohibited_unless' => 'The :attribute field is prohibited unless :other is in :values.',
     'prohibits' => 'The :attribute field prohibits :other from being present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => 'Nama :attribute tidak boleh kosong.',
     'required_array_keys' => 'The :attribute field must contain entries for: :values.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
@@ -135,7 +135,7 @@ return [
     'starts_with' => 'The :attribute must start with one of the following: :values.',
     'string' => 'The :attribute must be a string.',
     'timezone' => 'The :attribute must be a valid timezone.',
-    'unique' => 'The :attribute has already been taken.',
+    'unique' => 'Nama :attribute tersebut sudah ada.',
     'uploaded' => 'The :attribute failed to upload.',
     'url' => 'The :attribute must be a valid URL.',
     'uuid' => 'The :attribute must be a valid UUID.',
@@ -152,9 +152,31 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        // 'attribute-name' => [
+        //     'rule-name' => 'custom-message',
+        // ],
+        'amount' => [
+            'required' => 'Jumlah Transaksi tidak boleh kosong',
+            'numeric' => 'Jumlah Transaksi harus berupa angka',
+            'min' => 'Minimal Jumlah Transaksi harus Rp 10.000',
+            // 'lte' =>  'Transaksi Penarikan tidak boleh lebih dari Rp :value'
         ],
+        'email' => [
+            'required' => 'Email tidak boleh kosong',
+            'unique' => 'Email tersebut sudah digunakan',
+            'email' => 'Email yang dimasukan tidak valid'
+        ],
+        'name' => [
+            'required' => 'Nama user tidak boleh kosong',
+            'min' => 'Minimal nama user adalah 5 karakter',
+            'max' => 'Maksimal nama user adalah 50 karakter'
+        ],
+        'password' => [
+            'required' => 'Password tidak boleh kosong',
+            'min' => 'Password harus minimal 8 karakter',
+            'max' => 'Password melebihi batas yang ditentukan',
+            'confirmed' => 'Password konfirmasi tidak sama'
+        ]
     ],
 
     /*
@@ -168,6 +190,10 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'piggy_bank_name' => 'Tabungan',
+        'whislist_name' => 'Whislist',
+        'transaction_name' => 'Transaksi'
+    ],
 
 ];

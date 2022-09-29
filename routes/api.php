@@ -3,7 +3,9 @@
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BalanceController;
 use App\Http\Controllers\API\PiggyBankController;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\WhislistController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/piggybank/create', [PiggyBankController::class, 'createPiggyBank']);
     Route::put('/piggybank/update/{piggyBank}', [PiggyBankController::class, 'updatePiggyBank']);
     Route::delete('/piggybank/delete/{piggyBank}', [PiggyBankController::class, 'deletePiggyBank']);
+    Route::get('/piggybank/transactions/{piggyBank}', [PiggyBankController::class, 'getPiggyBankTransactions']);
     Route::post('/piggybank/transaction/create/{piggyBank}', [PiggyBankController::class, 'createPiggyBankTransaction']);
     Route::post('/piggybank/transaction/substract/{piggyBank}', [PiggyBankController::class, 'substractPiggyBankTransaction']);
     Route::delete('/piggybank/transaction/delete/{piggyBankTransaction}', [PiggyBankController::class, 'deletePiggyBankTransaction']);
@@ -34,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/whislist/create', [WhislistController::class, 'createWhislist']);
     Route::put('/whislist/update/{whislist}', [WhislistController::class, 'updateWhislist']);
     Route::delete('/whislist/delete/{whislist}', [WhislistController::class, 'deleteWhislist']);
+    Route::post('/whislist/transactions/{whislist}', [WhislistController::class, 'getWhislistTransaction']);
     Route::post('/whislist/transaction/create/{whislist}', [WhislistController::class, 'createWhislistTransaction']);
     Route::post('/whislist/transaction/substract/{whislist}', [WhislistController::class, 'substractWhislistTransaction']);
     Route::delete('/whislist/transaction/delete/{whislistTransaction}', [WhislistController::class, 'deleteWhislistTransaction']);
@@ -43,6 +47,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // logout
     Route::get('/logout', [AuthController::class, 'logout']);
+
+    // Register
+    Route::post('/register', [AuthController::class, 'register']);
+
+    // User
+    Route::get('/user', [UserController::class, 'getUser']);
+    Route::put('/user/changepassword', [UserController::class, 'changePassword']);
 });
 
 // login

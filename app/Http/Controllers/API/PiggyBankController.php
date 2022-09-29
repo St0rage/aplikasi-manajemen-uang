@@ -16,10 +16,11 @@ class PiggyBankController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
-            'data' => $piggyBanks
+            'status' => 'ok',
+            'data' => [
+                'piggy_banks' => $piggyBanks
+            ]
         ], 200);
-
     }
 
     public function getPiggyBankDetail(PiggyBank $piggyBank)
@@ -34,8 +35,10 @@ class PiggyBankController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
-            'data' => $piggyBank
+            'status' => 'ok',
+            'data' => [
+                'piggy_bank' => $piggyBank
+            ]
         ], 200);
     }
 
@@ -61,10 +64,10 @@ class PiggyBankController extends Controller
         ]);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
+            'code' => 201,
+            'status' => 'created',
             'message' => 'Tabungan ' . $validated['piggy_bank_name'] . ' berhasil dibuat'
-        ], 200);
+        ], 201);
     }
 
     public function updatePiggyBank(Request $request, PiggyBank $piggyBank)
@@ -81,7 +84,6 @@ class PiggyBankController extends Controller
         ];
 
         if ($request->piggy_bank_name != $piggyBank->piggy_bank_name) {
-            // $rules['piggy_bank_name'] = 'required|max:50|unique:piggy_banks,piggy_bank_name';
             $rules['piggy_bank_name'] = [
                 'required',
                 'max:50',
@@ -95,7 +97,7 @@ class PiggyBankController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
+            'status' => 'ok',
             'message' => 'Tabungan berhasil diubah menjadi ' . $validated['piggy_bank_name']
         ], 200);
     }
@@ -114,7 +116,7 @@ class PiggyBankController extends Controller
                 'code' => 400,
                 'status' => 'error',
                 'message' => 'Tabungan ini bersifat primary, tidak bisa dihapus'
-            ]);
+            ], 400);
         }
 
         $currentAmount = $piggyBank->piggy_bank_total;
@@ -124,10 +126,10 @@ class PiggyBankController extends Controller
 
         if ($currentAmount == 0) {
             return response()->json([
-                'code' => 200,
+                'code' => 204,
                 'status' =>  'success',
                 'message' => 'Tabungan berhasil dihapus'      
-            ]);
+            ], 204);
         } else {
             $primayPiggyBank = PiggyBank::where('user_id', auth()->user()->id)
                                             ->where('type', 1)
@@ -146,11 +148,31 @@ class PiggyBankController extends Controller
             self::sumPiggyBankTransaction($primayPiggyBank->id);
 
             return response()->json([
-                'code' => 200,
+                'code' => 204,
                 'status' =>  'success',
                 'message' => 'Tabungan berhasil dihapus'      
-            ]);
+            ], 204);
         }
+    }
+
+    public function getPiggyBankTransactions(Request $request, PiggyBank $piggyBank)
+    {
+        if (auth()->user()->id != $piggyBank->user_id) {
+            return response()->json([
+                'code' => 403,
+                'status' => 'forbidden',
+            ], 403);
+        }
+
+        $transactions =  PiggyBankTransaction::where('piggy_bank_id', $piggyBank->id)->offset($request->page * 5)->limit(5)->get();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'ok',
+            'data' => [
+                'transactions' => $transactions
+            ]
+        ], 200);
     }
 
     public function createPiggyBankTransaction(Request $request, PiggyBank $piggyBank)
@@ -179,10 +201,10 @@ class PiggyBankController extends Controller
         self::sumPiggyBankTransaction($piggyBank->id);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil ditambahkan ke Tabungan ' . $piggyBank->piggy_bank_name
-        ], 200);
+            'code' => 201,
+            'status' => 'created',
+            'message' => 'Transaksi sebesar Rp ' . number_format($validated['amount']) . ' berhasil ditambahkan ke Tabungan ' . $piggyBank->piggy_bank_name
+        ], 201);
     }
 
     public function substractPiggyBankTransaction(Request $request, PiggyBank $piggyBank)
@@ -196,7 +218,19 @@ class PiggyBankController extends Controller
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
-            'amount' => "required|numeric|min:10000|lte:$piggyBank->piggy_bank_total"
+            // 'amount' => "required|numeric|min:10000|lte:$piggyBank->piggy_bank_total"
+            'amount' => [
+                'required',
+                'numeric',
+                'min:1000',
+                function($attribute, $value, $fail) use ($piggyBank) {
+                    if ($piggyBank->piggy_bank_total == 0) {
+                        $fail('Penarikan gagal saldo tidak mencukupi.');
+                    } else if ($value > $piggyBank->piggy_bank_total) {
+                        $fail('Gagal, penarikan tidak boleh lebih dari Rp ' . number_format($piggyBank->piggy_bank_total) . '.');
+                    }
+                }
+            ]
         ]);
 
         $transaction = new PiggyBankTransaction([
@@ -211,10 +245,10 @@ class PiggyBankController extends Controller
         self::sumPiggyBankTransaction($piggyBank->id);
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
-            'message' => 'Transaksi sebesar ' . $validated['amount'] . ' berhasil dipotong dari Tabungan ' . $piggyBank->piggy_bank_name
-        ], 200);
+            'code' => 201,
+            'status' => 'created',
+            'message' => 'Transaksi sebesar Rp ' . number_format($validated['amount']) . ' berhasil dipotong dari Tabungan ' . $piggyBank->piggy_bank_name
+        ], 201);
     }
 
     public function deletePiggyBankTransaction(PiggyBankTransaction $piggyBankTransaction)
@@ -241,10 +275,10 @@ class PiggyBankController extends Controller
         self::sumPiggyBankTransaction($piggyBankTransaction->piggy_bank_id);
 
         return response()->json([
-            'code' => 200,
+            'code' => 204,
             'status' => 'success',
             'message' => 'Transaksi berhasil dihapus'
-        ], 200);
+        ], 204);
     }
 
     public static function sumPiggyBankTransaction($piggyBankId): void
@@ -259,6 +293,7 @@ class PiggyBankController extends Controller
 
         PiggyBank::where('id', $piggyBankId)->update(['piggy_bank_total' => array_sum($transactions)]);
 
+        // SUM BALANCE
         BalanceController::sumBalance();
     }
 }

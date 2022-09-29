@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Balance;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,22 +23,23 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::factory()->create([
             'name' => 'Dani Yudistira Maulana',
             'email' => 'daniyudistira25@gmail.com',
-            'password' => Hash::make('dani12345')
+            'password' => Hash::make('dani12345'),
+            'is_admin' => 1
         ]);
 
-        \App\Models\User::factory()->create([
-            'name' => 'Veronica Christine',
-            'email' => 'veronica25@gmail.com',
-            'password' => Hash::make('vero12345')
-        ]);
+        // \App\Models\User::factory()->create([
+        //     'name' => 'Veronica Christine',
+        //     'email' => 'veronica25@gmail.com',
+        //     'password' => Hash::make('vero12345')
+        // ]);
 
         Balance::create([
             'user_id' => 1
         ]);
 
-        Balance::create([
-            'user_id' => 2
-        ]);
+        // Balance::create([
+        //     'user_id' => 2
+        // ]);
 
 
 
