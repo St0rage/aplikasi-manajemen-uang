@@ -37,7 +37,7 @@ class AuthController extends Controller
 
         return response()->json([
             'code' => '200',
-            'status' => 'success',
+            'status' => 'ok',
             'data' => [
                 'user' => $user,
                 'piggy_banks_count' => $piggyBankCount,
@@ -52,9 +52,9 @@ class AuthController extends Controller
 
         return response()->json([
             'code' => '200',
-            'status' => 'success',
+            'status' => 'ok',
             'message' => 'Berhasil Logout'
-        ]);
+        ], 200);
     }
 
     public function register(Request $request)
@@ -69,7 +69,6 @@ class AuthController extends Controller
         $validated = $request->validate([
             'email' => 'required|email:dns|unique:users',
             'name' => 'required|min:5|max:50'
-            // 'password' => 'required|min:5|max:255',
         ]);
 
         $password = mt_rand(10000, 50000);
@@ -91,9 +90,9 @@ class AuthController extends Controller
         ]));
 
         return response()->json([
-            'code' => 200,
-            'status' => 'success',
+            'code' => 201,
+            'status' => 'created',
             'message' => 'User berhasil dibuat silahkan cek email untuk dapat melihat password'
-        ]);
+        ], 201);
     }
 }

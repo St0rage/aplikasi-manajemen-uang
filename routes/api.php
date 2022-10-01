@@ -5,7 +5,6 @@ use App\Http\Controllers\API\BalanceController;
 use App\Http\Controllers\API\PiggyBankController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\WhislistController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*

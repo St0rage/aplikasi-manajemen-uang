@@ -12,7 +12,15 @@ class BalanceController extends Controller
 {
     public function getBalance()
     {
-        return Balance::where('user_id', auth()->user()->id)->get()->first();
+        $balance = Balance::where('user_id', auth()->user()->id)->get()->first();
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'ok',
+            'data' => [
+                'balance' => $balance
+            ]
+        ], 200);
     }
 
     public static function sumBalance(): void

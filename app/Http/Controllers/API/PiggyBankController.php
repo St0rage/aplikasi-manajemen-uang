@@ -28,18 +28,18 @@ class PiggyBankController extends Controller
         
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
-        return response()->json([
-            'code' => 200,
-            'status' => 'ok',
-            'data' => [
-                'piggy_bank' => $piggyBank
-            ]
-        ], 200);
+            return response()->json([
+                'code' => 200,
+                'status' => 'ok',
+                'data' => [
+                    'piggy_bank' => $piggyBank
+                ]
+            ], 200);
     }
 
     public function createPiggyBank(Request $request)
@@ -74,9 +74,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $rules = [
@@ -106,9 +106,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         if ($piggyBank->type == 1) {
@@ -159,9 +159,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $transactions =  PiggyBankTransaction::where('piggy_bank_id', $piggyBank->id)->offset($request->page * 5)->limit(5)->get();
@@ -179,9 +179,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $validated = $request->validate([
@@ -211,9 +211,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $validated = $request->validate([
@@ -255,9 +255,9 @@ class PiggyBankController extends Controller
     {
         if (auth()->user()->id != $piggyBankTransaction->piggyBank->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }   
         
         $lastTransaction =  PiggyBankTransaction::where('piggy_bank_id', $piggyBankTransaction->piggy_bank_id)->get()->last();

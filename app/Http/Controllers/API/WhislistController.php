@@ -29,9 +29,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         return response()->json([
@@ -69,9 +69,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $rules = [
@@ -101,9 +101,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $currentAmount = $whislist->whislist_total;
@@ -145,9 +145,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $transactions =  WhislistTransaction::where('whislist_id', $whislist->id)->offset($request->page * 5)->limit(5)->get();
@@ -165,9 +165,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $validated = $request->validate([
@@ -197,9 +197,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
 
         $validated = $request->validate([
@@ -241,9 +241,9 @@ class WhislistController extends Controller
     {
         if (auth()->user()->id != $whislistTransaction->whislist->user_id) {
             return response()->json([
-                'code' => 403,
-                'status' => 'forbidden',
-            ], 403);
+                'code' => 404,
+                'status' => 'not found',
+            ], 404);
         }
         
         $lastTransaction =  WhislistTransaction::where('whislist_id', $whislistTransaction->whislist_id)->get()->last();

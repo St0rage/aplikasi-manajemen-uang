@@ -176,6 +176,25 @@ return [
             'min' => 'Password harus minimal 8 karakter',
             'max' => 'Password melebihi batas yang ditentukan',
             'confirmed' => 'Password konfirmasi tidak sama'
+        ],
+        'piggy_bank_name' => [
+            'required' => 'Nama Tabungan tidak boleh kosong',
+            'max' => 'Nama Tabungan tidak boleh lebih dari 50 Karakter',
+            'unique' => 'Nama Tabungan tersebut sudah ada'
+        ],
+        'whislist_name' => [
+            'required' => 'Nama Whislist tidak boleh kosong',
+            'max' => 'Nama Whislist tidak boleh lebih dari 50 Karakter',
+            'unique' => 'Nama Whislist tersebut sudah ada'
+        ],
+        'transaction_name' => [
+            'required' => 'Nama Transaksi tidak boleh kosong',
+            'max' => 'Nama Transaksi tidak boleh lebih dari 50 Karakter'
+        ],
+        'amount' => [
+            'required' => 'Jumlah transaksi tidak boleh kosong',
+            'numeric' => 'Jumlah transaksi harus berupa angka',
+            'min' => 'Minimal jumlah transaksi Rp 10.000'
         ]
     ],
 

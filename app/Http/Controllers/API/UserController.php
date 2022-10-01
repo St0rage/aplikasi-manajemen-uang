@@ -13,11 +13,11 @@ class UserController extends Controller
     {
         return response()->json([
             'code' => 200,
-            'status' => 'success',
+            'status' => 'ok',
             'data' => [
                 'user' => auth()->user()
             ]
-        ]);
+        ], 200);
     }
 
     public function changePassword(Request $request)
@@ -30,8 +30,8 @@ class UserController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'success',
+            'status' => 'ok',
             'message' => 'Password berhasil diubah'
-        ]);
+        ], 200);
     }
 }
