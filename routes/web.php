@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use PhpParser\Builder\Function_;
+use PhpParser\Node\Expr\FuncCall;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function() {
+    return response()->json([
+        'code' => 404,
+        'status' => 'not found'
+    ], 404);
 });
+
+Route::fallback(function() {
+    return response()->json([
+        'code' => 404,
+        'status' => 'not found'
+    ], 404);
+});
+
