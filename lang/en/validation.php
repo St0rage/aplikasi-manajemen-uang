@@ -187,6 +187,11 @@ return [
             'max' => 'Nama Whislist tidak boleh lebih dari 50 Karakter',
             'unique' => 'Nama Whislist tersebut sudah ada'
         ],
+        'whislist_target' => [
+            'required' => 'Target Whislist tidak boleh kosong',
+            'numeric' => 'Target Whislist harus berupa angka',
+            'min' => 'Minimal Target whislist Rp 10.000'
+        ],
         'transaction_name' => [
             'required' => 'Nama Transaksi tidak boleh kosong',
             'max' => 'Nama Transaksi tidak boleh lebih dari 50 Karakter'

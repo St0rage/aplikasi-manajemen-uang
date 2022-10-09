@@ -50,12 +50,14 @@ class WhislistController extends Controller
                 'required',
                 'max:50',
                 Rule::unique('whislists', 'whislist_name')->where(fn ($query) => $query->where('user_id', auth()->user()->id))
-            ]
+            ],
+            'whislist_target' => 'required|numeric|min:10000'
         ]);
 
         Whislist::create([
             'user_id' => auth()->user()->id,
             'whislist_name' => $validated['whislist_name'],
+            'whislist_target' => $validated['whislist_target']
         ]);
 
         return response()->json([
@@ -75,7 +77,17 @@ class WhislistController extends Controller
         }
 
         $rules = [
-            'whislist_name' => 'required|max:50'
+            'whislist_name' => 'required|max:50',
+            // 'whislist_target' => 'required|numeric|min:10000'
+            'whislist_target' => [
+                'required',
+                'numeric',
+                function ($attribute, $value, $fail) use ($whislist) {
+                    if ($value < $whislist->whislist_total) {
+                        $fail('Target tidak boleh kurang dari total whislist anda saat ini');
+                    }
+                }
+            ]
         ];
 
         if ($request->whislist_name != $whislist->whislist_name) {
@@ -90,10 +102,13 @@ class WhislistController extends Controller
 
         Whislist::where('id', $whislist->id)->update($validated);
 
+        // Update Progress
+        self::updateProgress($whislist->id);
+
         return response()->json([
             'code' => 200,
             'status' => 'ok',
-            'message' => 'Whislist berhasil diubah menjadi ' . $validated['whislist_name']
+            'message' => 'Whislist berhasil diubah'
         ], 200);
     }
 
@@ -172,7 +187,21 @@ class WhislistController extends Controller
 
         $validated = $request->validate([
             'transaction_name' => 'required|max:50',
-            'amount' => 'required|numeric|min:10000'
+            // 'amount' => 'required|numeric|min:10000',
+            'amount' => [
+                'required',
+                'numeric',
+                'min:10000',
+                function($attribute, $value, $fail) use ($whislist) {
+                    if ($value > $whislist->whislist_target) {
+                        $fail('Jumlah transaksi melebihi target');
+                    } else if ($whislist->whislist_total == $whislist->whislist_target) {
+                        $fail('Transaksi sudah mencapai target');
+                    } else if (($value + $whislist->whislist_total) > $whislist->whislist_target) {
+                        $fail('Jumlah transaksi melebihi target');
+                    }
+                }
+            ]
         ]);
 
         $transaction = new WhislistTransaction([
@@ -260,26 +289,47 @@ class WhislistController extends Controller
         // SUM TRANSACTION
         self::sumWhislistTransaction($whislistTransaction->whislist_id);
 
+        // adjust whislist_target if deleting transaction causing whislist_target less than whislist_total
+        $whislist = Whislist::where('id', $whislistTransaction->whislist_id)->get()->first();
+        if ($whislist->whislist_total > $whislist->whislist_target) {
+            Whislist::where('id', $whislistTransaction->whislist_id)->update(['whislist_target' => $whislist->whislist_total]);
+            self::updateProgress($whislistTransaction->whislist_id);
+        }
+
         return response()->json([
-            'code' => 204,
+            'code' => 200,
             'status' => 'success',
             'message' => 'Transaksi berhasil dihapus'
-        ], 204);
+        ], 200);
     }
 
     private static function sumWhislistTransaction($whislistId): void
     {
         $transactions = [];
 
+        $whislist = Whislist::where('id', $whislistId)->get()->first();
         $whislistTransaction =  WhislistTransaction::where('whislist_id', $whislistId)->get();
 
         foreach($whislistTransaction as $key => $value) {
             array_push($transactions, $value['amount']);
         }
 
-        Whislist::where('id', $whislistId)->update(['whislist_total' => array_sum($transactions)]);
+        $whislistTotal = array_sum($transactions);
+        $progress = ($whislistTotal / $whislist->whislist_target) * 100;
+
+        Whislist::where('id', $whislistId)->update(['whislist_total' => $whislistTotal]);
+        Whislist::where('id', $whislistId)->update(['progress' => $progress]);
 
         // SUM BALANCE
         BalanceController::sumBalance();
+    }
+
+    private static function updateProgress($whislistId):void
+    {
+        $whislist = Whislist::where('id', $whislistId)->get()->first();
+
+        $progress = ($whislist->whislist_total / $whislist->whislist_target) * 100;
+
+        Whislist::where('id', $whislistId)->update(['progress' => $progress]);
     }
 }
