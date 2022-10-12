@@ -179,12 +179,12 @@ return [
         ],
         'piggy_bank_name' => [
             'required' => 'Nama Tabungan tidak boleh kosong',
-            'max' => 'Nama Tabungan tidak boleh lebih dari 50 Karakter',
+            'max' => 'Nama Tabungan tidak boleh lebih dari 10 Karakter',
             'unique' => 'Nama Tabungan tersebut sudah ada'
         ],
         'whislist_name' => [
             'required' => 'Nama Whislist tidak boleh kosong',
-            'max' => 'Nama Whislist tidak boleh lebih dari 50 Karakter',
+            'max' => 'Nama Whislist tidak boleh lebih dari 18 Karakter',
             'unique' => 'Nama Whislist tersebut sudah ada'
         ],
         'whislist_target' => [
@@ -194,7 +194,7 @@ return [
         ],
         'transaction_name' => [
             'required' => 'Nama Transaksi tidak boleh kosong',
-            'max' => 'Nama Transaksi tidak boleh lebih dari 50 Karakter'
+            'max' => 'Nama Transaksi tidak boleh lebih dari 15 Karakter'
         ],
         'amount' => [
             'required' => 'Jumlah transaksi tidak boleh kosong',

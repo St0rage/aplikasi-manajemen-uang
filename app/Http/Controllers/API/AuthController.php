@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json([
                 'code' => '401',
-                'status' => 'error',
+                'status' => 'UNAUTHORIZED',
                 'message' => 'Gagal Login Email Atau Password Salah'
             ], 401);
         }
@@ -37,12 +37,10 @@ class AuthController extends Controller
 
         return response()->json([
             'code' => '200',
-            'status' => 'ok',
-            'data' => [
-                'user' => $user,
-                'piggy_banks_count' => $piggyBankCount,
-                'token' => $token
-            ]
+            'status' => 'OK',
+            'data' => $user,
+            'piggy_banks_count' => $piggyBankCount,
+            'token' => $token
         ], 200);
     }
 
@@ -52,7 +50,7 @@ class AuthController extends Controller
 
         return response()->json([
             'code' => '200',
-            'status' => 'ok',
+            'status' => 'OK',
             'message' => 'Berhasil Logout'
         ], 200);
     }
@@ -62,7 +60,7 @@ class AuthController extends Controller
         if (!Gate::allows('register-user', auth()->user()->id)) {
             return response()->json([
                 'code' => 403,
-                'status' => 'forbidden',
+                'status' => 'FORBIDDEN',
             ], 403);
         }
 
@@ -91,7 +89,7 @@ class AuthController extends Controller
 
         return response()->json([
             'code' => 201,
-            'status' => 'created',
+            'status' => 'CREATED',
             'message' => 'User berhasil dibuat silahkan cek email untuk dapat melihat password'
         ], 201);
     }

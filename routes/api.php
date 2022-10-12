@@ -21,38 +21,38 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     // PiggyBank
     Route::get('/piggybanks', [PiggyBankController::class, 'getPiggyBanks']);
-    Route::get('/piggybank/detail/{piggyBank}', [PiggyBankController::class, 'getPiggyBankDetail']);
+    Route::get('/piggybank/{piggyBank}/detail', [PiggyBankController::class, 'getPiggyBankDetail']);
     Route::post('/piggybank/create', [PiggyBankController::class, 'createPiggyBank']);
-    Route::put('/piggybank/update/{piggyBank}', [PiggyBankController::class, 'updatePiggyBank']);
-    Route::delete('/piggybank/delete/{piggyBank}', [PiggyBankController::class, 'deletePiggyBank']);
-    Route::get('/piggybank/transactions/{piggyBank}', [PiggyBankController::class, 'getPiggyBankTransactions']);
-    Route::post('/piggybank/transaction/create/{piggyBank}', [PiggyBankController::class, 'createPiggyBankTransaction']);
-    Route::post('/piggybank/transaction/substract/{piggyBank}', [PiggyBankController::class, 'substractPiggyBankTransaction']);
-    Route::delete('/piggybank/transaction/delete/{piggyBankTransaction}', [PiggyBankController::class, 'deletePiggyBankTransaction']);
+    Route::put('/piggybank/{piggyBank}/update', [PiggyBankController::class, 'updatePiggyBank']);
+    Route::delete('/piggybank/{piggyBank}/delete/', [PiggyBankController::class, 'deletePiggyBank']);
+    Route::get('/piggybank/{piggyBank}/transactions', [PiggyBankController::class, 'getPiggyBankTransactions']);
+    Route::post('/piggybank/{piggyBank}/transaction/deposit', [PiggyBankController::class, 'createPiggyBankTransaction']);
+    Route::post('/piggybank/{piggyBank}/transaction/withdraw', [PiggyBankController::class, 'substractPiggyBankTransaction']);
+    Route::delete('/piggybank/transaction/{piggyBankTransaction}/delete', [PiggyBankController::class, 'deletePiggyBankTransaction']);
 
     // Whislist
     Route::get('/whislists', [WhislistController::class, 'getWhislists']);
-    Route::get('/whislist/detail/{whislist}', [WhislistController::class, 'getWhislistDetail']);
+    Route::get('/whislist/{whislist}/detail', [WhislistController::class, 'getWhislistDetail']);
     Route::post('/whislist/create', [WhislistController::class, 'createWhislist']);
-    Route::put('/whislist/update/{whislist}', [WhislistController::class, 'updateWhislist']);
-    Route::delete('/whislist/delete/{whislist}', [WhislistController::class, 'deleteWhislist']);
-    Route::post('/whislist/transactions/{whislist}', [WhislistController::class, 'getWhislistTransaction']);
-    Route::post('/whislist/transaction/create/{whislist}', [WhislistController::class, 'createWhislistTransaction']);
-    Route::post('/whislist/transaction/substract/{whislist}', [WhislistController::class, 'substractWhislistTransaction']);
-    Route::delete('/whislist/transaction/delete/{whislistTransaction}', [WhislistController::class, 'deleteWhislistTransaction']);
+    Route::put('/whislist/{whislist}/update', [WhislistController::class, 'updateWhislist']);
+    Route::delete('/whislist/{whislist}/delete', [WhislistController::class, 'deleteWhislist']);
+    Route::get('/whislist/{whislist}/transactions', [WhislistController::class, 'getWhislistTransactions']);
+    Route::post('/whislist/{whislist}/transaction/deposit', [WhislistController::class, 'depositWhislistTransaction']);
+    Route::post('/whislist/{whislist}/transaction/withdraw', [WhislistController::class, 'withdrawWhislistTransaction']);
+    Route::delete('/whislist/transaction/{whislistTransaction}/delete', [WhislistController::class, 'deleteWhislistTransaction']);
 
     // Balance
     Route::get('/balance', [BalanceController::class, 'getBalance']);
 
-    // logout
-    Route::get('/logout', [AuthController::class, 'logout']);
-
     // Register
     Route::post('/register', [AuthController::class, 'register']);
-
+    
     // User
     Route::get('/user', [UserController::class, 'getUser']);
     Route::put('/user/changepassword', [UserController::class, 'changePassword']);
+
+    // logout
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
 // login

@@ -16,10 +16,8 @@ class BalanceController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'ok',
-            'data' => [
-                'balance' => $balance
-            ]
+            'status' => 'OK',
+            'data' => $balance
         ], 200);
     }
 

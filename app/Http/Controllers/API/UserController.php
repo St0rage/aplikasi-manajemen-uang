@@ -13,10 +13,8 @@ class UserController extends Controller
     {
         return response()->json([
             'code' => 200,
-            'status' => 'ok',
-            'data' => [
-                'user' => auth()->user()
-            ]
+            'status' => 'OK',
+            'data' => auth()->user()
         ], 200);
     }
 
@@ -30,7 +28,7 @@ class UserController extends Controller
 
         return response()->json([
             'code' => 200,
-            'status' => 'ok',
+            'status' => 'OK',
             'message' => 'Password berhasil diubah'
         ], 200);
     }

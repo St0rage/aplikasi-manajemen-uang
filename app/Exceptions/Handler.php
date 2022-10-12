@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/*')) {
                 return response()->json([
                     'code' => 404,
-                    'status' => 'not found'
+                    'status' => 'NOT_FOUND'
                 ], 404);
             }
         });
