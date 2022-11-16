@@ -31,7 +31,7 @@ class SendAccount extends Mailable
      */
     public function build()
     {
-        return $this->from('daniyudistira25@gmail.com', 'Aplikasi Manajemen Uang')
+        return $this->from('daniyudistira25@gmail.com', 'Simpan Uang')
                     ->subject('Akun Anda')
                     ->view('email.sendaccount')
                     ->with([

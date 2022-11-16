@@ -48,6 +48,7 @@ class PiggyBankController extends Controller
             'piggy_bank_name' => [
                 'required',
                 'max:10',
+                'min:3',
                 Rule::unique('piggy_banks', 'piggy_bank_name')->where(fn ($query) => $query->where('user_id', auth()->user()->id))
             ]
         ]);

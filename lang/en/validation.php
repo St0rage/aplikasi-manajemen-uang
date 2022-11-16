@@ -180,7 +180,8 @@ return [
         'piggy_bank_name' => [
             'required' => 'Nama Tabungan tidak boleh kosong',
             'max' => 'Nama Tabungan tidak boleh lebih dari 10 Karakter',
-            'unique' => 'Nama Tabungan tersebut sudah ada'
+            'min' => 'Nama Tabungan minimal harus 3 karakter',
+            'unique' => 'Nama Tabungan tersebut sudah ada',
         ],
         'whislist_name' => [
             'required' => 'Nama Whislist tidak boleh kosong',
