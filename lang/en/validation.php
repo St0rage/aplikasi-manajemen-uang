@@ -186,6 +186,7 @@ return [
         'whislist_name' => [
             'required' => 'Nama Whislist tidak boleh kosong',
             'max' => 'Nama Whislist tidak boleh lebih dari 18 Karakter',
+            'min' => 'Nama Whislist minimal harus 3 karakter',
             'unique' => 'Nama Whislist tersebut sudah ada'
         ],
         'whislist_target' => [
