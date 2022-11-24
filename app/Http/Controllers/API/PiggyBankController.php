@@ -30,6 +30,8 @@ class PiggyBankController extends Controller
             ], 404);
         }
 
+        $piggyBank['total_transaction'] = PiggyBankTransaction::where('piggy_bank_id', $piggyBank->id)->count();
+
         return response()->json([
             'code' => 200,
             'status' => 'OK',
@@ -160,7 +162,7 @@ class PiggyBankController extends Controller
             ], 404);
         }
 
-        $transactions =  PiggyBankTransaction::where('piggy_bank_id', $piggyBank->id)->offset($request->page * 5)->limit(5)->get();
+        $transactions =  PiggyBankTransaction::where('piggy_bank_id', $piggyBank->id)->offset($request->page * 10)->limit(10)->orderBy('id', 'desc')->get();
 
         return response()->json([
             'code' => 200,
