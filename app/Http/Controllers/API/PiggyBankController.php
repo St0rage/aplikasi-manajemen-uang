@@ -214,7 +214,7 @@ class PiggyBankController extends Controller
         }
 
         $validated = $request->validate([
-            'transaction_name' => 'required|max:15',
+            'transaction_name' => 'required|max:15|min:3',
             // 'amount' => "required|numeric|min:10000|lte:$piggyBank->piggy_bank_total"
             'amount' => [
                 'required',

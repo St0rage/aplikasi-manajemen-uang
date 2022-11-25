@@ -196,7 +196,8 @@ return [
         ],
         'transaction_name' => [
             'required' => 'Nama Transaksi tidak boleh kosong',
-            'max' => 'Nama Transaksi tidak boleh lebih dari 15 Karakter'
+            'max' => 'Nama Transaksi tidak boleh lebih dari 15 Karakter',
+            'min' => 'Nama Transaksi minimal harus 3 karakter'
         ],
         'amount' => [
             'required' => 'Jumlah transaksi tidak boleh kosong',

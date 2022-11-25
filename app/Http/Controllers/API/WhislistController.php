@@ -32,6 +32,8 @@ class WhislistController extends Controller
             ], 404);
         }
 
+        $whislist['total_transaction'] = WhislistTransaction::where('whislist_id', $whislist->id)->count();
+
         return response()->json([
             'code' => 200,
             'status' => 'OK',
@@ -162,7 +164,7 @@ class WhislistController extends Controller
             ], 404);
         }
 
-        $transactions =  WhislistTransaction::where('whislist_id', $whislist->id)->offset($request->page * 5)->limit(5)->get();
+        $transactions =  WhislistTransaction::where('whislist_id', $whislist->id)->offset($request->page * 10)->limit(10)->orderBy('id', 'desc')->get();
 
         return response()->json([
             'code' => 200,
@@ -228,7 +230,7 @@ class WhislistController extends Controller
         }
 
         $validated = $request->validate([
-            'transaction_name' => 'required|max:15',
+            'transaction_name' => 'required|max:15|min:3',
             // 'amount' => "required|numeric|min:10000|lte:$whislist->whislist_total"
             'amount' => [
                 'required',
