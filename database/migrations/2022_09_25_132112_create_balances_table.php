@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('balances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->decimal('balance_total', 10,2)->default(0);
+            $table->decimal('balance_total', 15,2)->default(0);
             $table->timestamps();
         });
     }

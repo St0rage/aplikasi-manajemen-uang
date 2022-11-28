@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('whislist_id')->constrained()->onDelete('cascade');
             $table->string('transaction_name');
-            $table->decimal('amount', 10,2);
+            $table->decimal('amount', 15,2);
             $table->boolean('status');
             $table->string('date');
             $table->timestamps();

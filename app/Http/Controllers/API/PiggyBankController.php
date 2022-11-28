@@ -78,13 +78,14 @@ class PiggyBankController extends Controller
         }
 
         $rules = [
-            'piggy_bank_name' => 'required|max:10'
+            'piggy_bank_name' => 'required|max:10|min:3'
         ];
 
         if ($request->piggy_bank_name != $piggyBank->piggy_bank_name) {
             $rules['piggy_bank_name'] = [
                 'required',
                 'max:10',
+                'min:3',
                 Rule::unique('piggy_banks', 'piggy_bank_name')->where(fn ($query) => $query->where('user_id', auth()->user()->id))
             ];
         }

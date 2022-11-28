@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('whislist_name');
-            $table->decimal('whislist_total', 10,2)->default(0);
-            $table->decimal('whislist_target', 10,2);
+            $table->decimal('whislist_total', 15,2)->default(0);
+            $table->decimal('whislist_target', 15,2);
             $table->decimal('progress', 5,2)->default(0);
             $table->timestamps();
         });

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('piggy_bank_name');
-            $table->decimal('piggy_bank_total', 10,2)->default(0);
+            $table->decimal('piggy_bank_total', 15,2)->default(0);
             $table->boolean('type')->default(0);
             $table->timestamps();
         });

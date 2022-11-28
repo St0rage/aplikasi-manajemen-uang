@@ -76,7 +76,7 @@ class WhislistController extends Controller
         }
 
         $rules = [
-            'whislist_name' => 'required|max:18',
+            'whislist_name' => 'required|max:18|min:3',
             // 'whislist_target' => 'required|numeric|min:10000'
             'whislist_target' => [
                 'required',
@@ -93,6 +93,7 @@ class WhislistController extends Controller
             $rules['whislist_name'] = [
                 'required',
                 'max:18',
+                'min:3',
                 Rule::unique('whislists', 'whislist_name')->where(fn ($query) => $query->where('user_id', auth()->user()->id))
             ];
         }
