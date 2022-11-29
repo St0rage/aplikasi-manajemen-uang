@@ -122,7 +122,7 @@ class WhislistController extends Controller
         }
 
         $currentAmount = $whislist->whislist_total;
-        $currentWhislistName = $whislist->whislist_name;
+        // $currentWhislistName = $whislist->whislist_name;
 
         Whislist::destroy($whislist->id);
 
@@ -138,7 +138,7 @@ class WhislistController extends Controller
                                             ->get()->first();
 
             $transaction = new PiggyBankTransaction([
-                'transaction_name' => 'Saldo Pindahan Whislist ' . $currentWhislistName,
+                'transaction_name' => 'Saldo Pindahan',
                 'amount' => $currentAmount,
                 'status' => 1,
                 'date' => time()

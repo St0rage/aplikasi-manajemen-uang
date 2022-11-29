@@ -114,12 +114,12 @@ class PiggyBankController extends Controller
             return response()->json([
                 'code' => 400,
                 'status' => 'BAD_REQUEST',
-                'message' => 'Tabungan ini bersifat primary, tidak bisa dihapus'
+                'message' => 'Tabungan ini merupakan tabungan Utama, tidak bisa dihapus'
             ], 400);
         }
 
         $currentAmount = $piggyBank->piggy_bank_total;
-        $currentPiggyBankName = $piggyBank->piggy_bank_name;
+        // $currentPiggyBankName = $piggyBank->piggy_bank_name;
 
         PiggyBank::destroy($piggyBank->id);
 
@@ -135,7 +135,7 @@ class PiggyBankController extends Controller
                                             ->get()->first();
 
             $transaction = new PiggyBankTransaction([
-                'transaction_name' => 'Saldo Pindahan Tabungan ' . $currentPiggyBankName,
+                'transaction_name' => 'Saldo Pindahan',
                 'amount' => $currentAmount,
                 'status' => 1,
                 'date' => time()
