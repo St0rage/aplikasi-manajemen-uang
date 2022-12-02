@@ -7,9 +7,8 @@
     <title>Aplikasi Manajemen Uang</title>
 </head>
 <body>
-    <h3>Akun Anda</h3>
+    <h3>Password Baru Anda</h3>
     <p><b>Email : </b>{{ $email }}</p>
-    <p><b>Nama : </b>{{ $name }}</p>
     <p><b>Password : {{ $password }}</b></p>
     <br/>
     <br/>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Mail\SendAccount;
+use App\Mail\SendPassword;
 use App\Models\Balance;
 use App\Models\PiggyBank;
 use App\Models\User;
@@ -57,7 +58,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        if (!Gate::allows('register-user', auth()->user()->id)) {
+        if (!Gate::allows('register-and-reset', auth()->user()->id)) {
             return response()->json([
                 'code' => 403,
                 'status' => 'FORBIDDEN',
@@ -92,5 +93,33 @@ class AuthController extends Controller
             'status' => 'CREATED',
             'message' => 'User berhasil dibuat silahkan cek email untuk dapat melihat password'
         ], 201);
+    }
+
+    public function resetPassword(Request $request) {
+        if (!Gate::allows('register-and-reset', auth()->user()->id)) {
+            return response()->json([
+                'code' => 403,
+                'status' => 'FORBIDDEN'
+            ], 403);
+        }
+
+        $validated = $request->validate([
+            'email' => 'required|email:dns|exists:users,email'
+        ]);
+
+        $password = mt_rand(10000, 50000);
+
+        User::where('email', $validated['email'])->update(['password' => Hash::make($password)]);
+
+        Mail::to($validated['email'])->send(new SendPassword([
+            'email' => $validated['email'],
+            'password' => $password
+        ]));
+
+        return response()->json([
+            'code' => 200,
+            'status' => 'OK',
+            'message' => 'Password berhasil direset silahkan cek email untuk dapat melihat password'
+        ]);
     }
 }

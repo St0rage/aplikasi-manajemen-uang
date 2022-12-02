@@ -164,7 +164,8 @@ return [
         'email' => [
             'required' => 'Email tidak boleh kosong',
             'unique' => 'Email tersebut sudah digunakan',
-            'email' => 'Email yang dimasukan tidak valid'
+            'email' => 'Email yang dimasukan tidak valid',
+            'exists' => 'Email tidak ditemukan'
         ],
         'name' => [
             'required' => 'Nama user tidak boleh kosong',

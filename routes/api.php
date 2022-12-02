@@ -46,7 +46,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Register
     Route::post('/register', [AuthController::class, 'register']);
-    
+
+    // Reset Password
+    Route::put('/resetpassword', [AuthController::class, 'resetPassword']);
+
     // User
     Route::get('/user', [UserController::class, 'getUser']);
     Route::put('/user/changepassword', [UserController::class, 'changePassword']);
