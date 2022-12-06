@@ -189,7 +189,7 @@ class WhislistController extends Controller
             'amount' => [
                 'required',
                 'numeric',
-                'min:10000',
+                'min:500',
                 function($attribute, $value, $fail) use ($whislist) {
                     if ($value > $whislist->whislist_target) {
                         $fail('Jumlah transaksi melebihi target');
@@ -236,7 +236,7 @@ class WhislistController extends Controller
             'amount' => [
                 'required',
                 'numeric',
-                'min:1000',
+                'min:500',
                 function($attribute, $value, $fail) use ($whislist) {
                     if ($whislist->whislist_total == 0) {
                         $fail('Penarikan gagal saldo tidak mencukupi.');

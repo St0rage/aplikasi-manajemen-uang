@@ -158,7 +158,7 @@ return [
         'amount' => [
             'required' => 'Jumlah Transaksi tidak boleh kosong',
             'numeric' => 'Jumlah Transaksi harus berupa angka',
-            'min' => 'Minimal Jumlah Transaksi harus Rp 10.000',
+            'min' => 'Minimal Jumlah Transaksi harus Rp 500',
             // 'lte' =>  'Transaksi Penarikan tidak boleh lebih dari Rp :value'
         ],
         'email' => [
@@ -200,11 +200,11 @@ return [
             'max' => 'Nama Transaksi tidak boleh lebih dari 15 Karakter',
             'min' => 'Nama Transaksi minimal harus 3 karakter'
         ],
-        'amount' => [
-            'required' => 'Jumlah transaksi tidak boleh kosong',
-            'numeric' => 'Jumlah transaksi harus berupa angka',
-            'min' => 'Minimal jumlah transaksi Rp 10.000'
-        ]
+        // 'amount' => [
+        //     'required' => 'Jumlah transaksi tidak boleh kosong',
+        //     'numeric' => 'Jumlah transaksi harus berupa angka',
+        //     'min' => 'Minimal jumlah transaksi Rp 10.000'
+        // ]
     ],
 
     /*

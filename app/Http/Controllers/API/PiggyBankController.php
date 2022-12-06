@@ -183,7 +183,7 @@ class PiggyBankController extends Controller
 
         $validated = $request->validate([
             // 'transaction_name' => 'required|max:50',
-            'amount' => 'required|numeric|min:10000'
+            'amount' => 'required|numeric|min:500'
         ]);
 
         $transaction = new PiggyBankTransaction([
@@ -220,7 +220,7 @@ class PiggyBankController extends Controller
             'amount' => [
                 'required',
                 'numeric',
-                'min:1000',
+                'min:500',
                 function($attribute, $value, $fail) use ($piggyBank) {
                     if ($piggyBank->piggy_bank_total == 0) {
                         $fail('Penarikan gagal saldo tidak mencukupi.');
